@@ -315,6 +315,7 @@ class LoginWindow(QWidget):
             # 获取公司代码和仓库ID
             company_code = self.company_info.get(company)
             warehouse_id = self.warehouse_info.get(warehouse)
+            warehouse_name = self.warehouse_info.get(warehouse)
 
             if not company_code or not warehouse_id:
                 self.show_error_message("获取公司或仓库信息失败")
@@ -371,10 +372,24 @@ class LoginWindow(QWidget):
 
     def open_main_window(self, headers):
         """打开主窗口"""
+        # 获取当前选中的仓库名称和对应的仓库ID
+        warehouse_name = self.warehouse_combo.currentText()
+        warehouse_id = self.warehouse_info.get(warehouse_name)
+        
+        print(f"打开主窗口时的仓库ID: {warehouse_id}")  # 调试信息
+        
+        # 创建主窗口实例时传入仓库ID
         self.main_window = MainWindow(
             base_url=self.current_host,  # 传递当前环境的base_url
-            headers=headers  # 传递headers
+            headers=headers,  # 传递headers
         )
+        
+        # 设置仓库ID
+        self.main_window.set_warehouse_id(warehouse_id)
+        # 设置仓库名称
+        self.main_window.set_warehouse_name(warehouse_name)
+        
+        # 显示主窗口
         self.main_window.show()
         self.close()  # 关闭登录窗口
 
