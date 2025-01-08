@@ -66,7 +66,7 @@ def get_owner_list(base_url, headers):
 def get_warehouse_inventory(base_url, headers, owner_info):
     """获取商品库存信息"""
     url = f"{base_url}/wms/report/stock/stockInfoRpt/pageInfo"
-    if owner_info == "QDBYYYGF":
+    if owner_info['ownerCode'] == "QDBYYYGF":
         data = {
             "ownerId": "103",
             "orgIdList": [
@@ -86,7 +86,7 @@ def get_warehouse_inventory(base_url, headers, owner_info):
             if sku_data['usableQty'] > 0:
                 sku_list.append(sku_data)
                 return sku_list
-    elif owner_info == "02":
+    elif owner_info['ownerCode'] == "02":
         data = {
             "ownerId": "100",
             "orgIdList": [
@@ -2629,7 +2629,8 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "updater": "3890",
                         "productFormType": "YP"
                     }
-                    response = requests.post(url = f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data, headers=headers)
+                    response = requests.post(url=f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data,
+                                             headers=headers)
                     return response.json()
                 elif owner_info['ownerCode'] == '01':
                     data = {
@@ -2663,7 +2664,8 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "updater": "3890",
                         "productFormType": "YP"
                     }
-                    response = requests.post(url = f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data, headers=headers)
+                    response = requests.post(url=f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data,
+                                             headers=headers)
                     return response.json()
             elif is_whole_piece == 1:
                 if owner_info['ownerCode'] == 'QDBYYYGF':
@@ -2697,7 +2699,8 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "updater": "3890",
                         "productFormType": "YP"
                     }
-                    response = requests.post(url = f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data, headers=headers)
+                    response = requests.post(url=f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data,
+                                             headers=headers)
                     return response.json()
                 elif owner_info['ownerCode'] == '01':
                     data = {
@@ -2730,7 +2733,8 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "updater": "3890",
                         "productFormType": "YP"
                     }
-                    response = requests.post(url = f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data, headers=headers)
+                    response = requests.post(url=f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data,
+                                             headers=headers)
                     return response.json()
                 else:
                     return "ownerCode参数错误"
@@ -2773,7 +2777,8 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "updater": "3890",
                         "productFormType": "YP"
                     }
-                    response = requests.post(url = f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data, headers=headers)
+                    response = requests.post(url=f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data,
+                                             headers=headers)
                     return response.json()
             elif owner_info['ownerCode'] == '01':
                 dt_list = []
@@ -2812,7 +2817,8 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     "updater": "3890",
                     "productFormType": "YP"
                 }
-                response = requests.post(url = f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data, headers=headers)
+                response = requests.post(url=f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data,
+                                         headers=headers)
                 return response.json()
         elif is_whole_piece == 1:
             if owner_info['ownerCode'] == 'QDBYYYGF':
@@ -2852,7 +2858,8 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     "updater": "3890",
                     "productFormType": "YP"
                 }
-                response = requests.post(url = f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data, headers=headers)
+                response = requests.post(url=f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data,
+                                         headers=headers)
                 return response.json()
             elif owner_info['ownerCode'] == '01':
                 dt_list = []
@@ -2891,7 +2898,340 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     "updater": "3890",
                     "productFormType": "YP"
                 }
-                response = requests.post(url = f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data, headers=headers)
+                response = requests.post(url=f"{base_url}/oms/api/erp/moveWh/addOrUpdateMoveWh", json=data,
+                                         headers=headers)
                 return response.json()
             else:
                 return "ownerCode参数错误"
+    elif order_type == 'DBRKD':
+        if is_mixed == 0:
+            if is_whole_piece == 0:
+                if owner_info['ownerCode'] == 'QDBYYYGF':
+                    data = {
+                        "businessType": 0,
+                        "companyCode": "50",
+                        "creator": "李鸿宾",
+                        "dtList": [
+                            {
+                                "amount": 10000000,
+                                "departmentCode": "N0028",
+                                "inOrderQty": 1,
+                                "invalidDate": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['invalidDate']}",
+                                "mainUnit": "罐",
+                                "orderLineNo": 1,
+                                "productionBatch": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['productionBatch']}",
+                                "productionDate": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['productionDate']}",
+                                "rowSupplierCode": "S00004158",
+                                "skuCode": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['skuCode']}",
+                            }
+                        ],
+                        "erpCreateTime": 1684981849000,
+                        "erpUpdateTime": 1684981850000,
+                        "orderPrice": 10000000,
+                        "orderStatus": 1,
+                        "orderType": "DBRK",
+                        "origNo": f"DBRK-{generate_number()}-{random.randint(1, 9999)}",
+                        "origPurchaseOrderNo": "DBRK-241231-005",
+                        "origSys": "CQ_ERP",
+                        "ownerCode": f"{owner_info['ownerCode']}",
+                        "productFormType": "YP",
+                        "supplierCode": "S00004158",
+                        "updater": "刘春苗",
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type='YCRKD')['source_code']}",
+                        "outWarehouseName": "青岛仓"
+                    }
+                    response = requests.post(url, json=data,
+                                             headers=headers)
+                    return response.json()
+                elif owner_info['ownerCode'] == '01':
+                    data = {
+                        "businessType": 0,
+                        "companyCode": "2",
+                        "creator": "李鸿宾",
+                        "dtList": [
+                            {
+                                "amount": 10000000,
+                                "departmentCode": "N0021",
+                                "inOrderQty": 1,
+                                "invalidDate": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['invalidDate']}",
+                                "mainUnit": "罐",
+                                "orderLineNo": 1,
+                                "productionBatch": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['productionBatch']}",
+                                "productionDate": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['productionDate']}",
+                                "rowSupplierCode": "S00004158",
+                                "skuCode": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['skuCode']}",
+                            }
+                        ],
+                        "erpCreateTime": 1684981849000,
+                        "erpUpdateTime": 1684981850000,
+                        "orderPrice": 10000000,
+                        "orderStatus": 1,
+                        "orderType": "DBRK",
+                        "origNo": f"DBRK-{generate_number()}-{random.randint(1, 9999)}",
+                        "origPurchaseOrderNo": "DBRK-241231-005",
+                        "origSys": "CQ_ERP",
+                        "ownerCode": f"{owner_info['ownerCode']}",
+                        "productFormType": "YP",
+                        "supplierCode": "S00004158",
+                        "updater": "刘春苗",
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type='YCRKD')['source_code']}",
+                        "outWarehouseName": "青岛仓"
+                    }
+                    response = requests.post(url, json=data,
+                                             headers=headers)
+                    return response.json()
+            elif is_whole_piece == 1:
+                if owner_info['ownerCode'] == 'QDBYYYGF':
+                    data = {
+                        "businessType": 0,
+                        "companyCode": "50",
+                        "creator": "李鸿宾",
+                        "dtList": [
+                            {
+                                "amount": 10000000,
+                                "departmentCode": "N0021",
+                                "inOrderQty": 1,
+                                "invalidDate": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['invalidDate']}",
+                                "mainUnit": "罐",
+                                "orderLineNo": 1,
+                                "productionBatch": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['productionBatch']}",
+                                "productionDate": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['productionDate']}",
+                                "rowSupplierCode": "S00004158",
+                                "skuCode": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['skuCode']}",
+                            }
+                        ],
+                        "erpCreateTime": 1684981849000,
+                        "erpUpdateTime": 1684981850000,
+                        "orderPrice": 10000000,
+                        "orderStatus": 1,
+                        "orderType": "DBRK",
+                        "origNo": f"DBRK-{generate_number()}-{random.randint(1, 9999)}",
+                        "origPurchaseOrderNo": "DBRK-241231-005",
+                        "origSys": "CQ_ERP",
+                        "ownerCode": f"{owner_info['ownerCode']}",
+                        "productFormType": "YP",
+                        "supplierCode": "S00004158",
+                        "updater": "刘春苗",
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type='YCRKD')['source_code']}",
+                        "outWarehouseName": "青岛仓"
+                    }
+                    response = requests.post(url, json=data,
+                                             headers=headers)
+                    return response.json()
+                elif owner_info['ownerCode'] == '01':
+                    data = {
+                        "businessType": 0,
+                        "companyCode": "2",
+                        "creator": "李鸿宾",
+                        "dtList": [
+                            {
+                                "amount": 10000000,
+                                "departmentCode": "N0021",
+                                "inOrderQty": 1,
+                                "invalidDate": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['invalidDate']}",
+                                "mainUnit": "罐",
+                                "orderLineNo": 1,
+                                "productionBatch": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['productionBatch']}",
+                                "productionDate": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['productionDate']}",
+                                "rowSupplierCode": "S00004158",
+                                "skuCode": f"{get_warehouse_inventory(base_url, headers, owner_info['ownerCode'])[0]['skuCode']}",
+                            }
+                        ],
+                        "erpCreateTime": 1684981849000,
+                        "erpUpdateTime": 1684981850000,
+                        "orderPrice": 10000000,
+                        "orderStatus": 1,
+                        "orderType": "DBRK",
+                        "origNo": f"DBRK-{generate_number()}-{random.randint(1, 9999)}",
+                        "origPurchaseOrderNo": "DBRK-241231-005",
+                        "origSys": "CQ_ERP",
+                        "ownerCode": f"{owner_info['ownerCode']}",
+                        "productFormType": "YP",
+                        "supplierCode": "S00004158",
+                        "updater": "刘春苗",
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type='YCRKD')['source_code']}",
+                        "outWarehouseName": "青岛仓"
+                    }
+                    response = requests.post(url, json=data,
+                                             headers=headers)
+                    return response.json()
+                else:
+                    return "ownerCode参数错误"
+        elif is_mixed == 1:
+            if is_whole_piece == 0:
+                if owner_info['ownerCode'] == 'QDBYYYGF':
+                    dt_list = []
+                    count = 0
+                    for sku_detail in get_warehouse_inventory(base_url, headers, owner_info):
+                        if count >= 2:
+                            break
+                        dt_item = {
+                            "amount": 10000000,
+                            "departmentCode": "N0028",
+                            "inOrderQty": 1,
+                            "invalidDate": f"{sku_detail['invalidDate']}",
+                            "mainUnit": "罐",
+                            "orderLineNo": 1,
+                            "productionBatch": f"{sku_detail['productionBatch']}",
+                            "productionDate": f"{sku_detail['productionDate']}",
+                            "rowSupplierCode": "S00004158",
+                            "skuCode": f"{sku_detail['skuCode']}",
+                        }
+                        dt_list.append(dt_item)
+                    dt_list[0]['inOrderQty'] = int(sku_details[0]['perQty']) - 1
+                    data = {
+                        "businessType": 0,
+                        "companyCode": "50",
+                        "creator": "李鸿宾",
+                        "dtList": dt_list,
+                        "erpCreateTime": 1684981849000,
+                        "erpUpdateTime": 1684981850000,
+                        "orderPrice": 10000000,
+                        "orderStatus": 1,
+                        "orderType": "DBRK",
+                        "origNo": f"DBRK-{generate_number()}-{random.randint(1, 9999)}",
+                        "origPurchaseOrderNo": "DBRK-241231-005",
+                        "origSys": "CQ_ERP",
+                        "ownerCode": f"{owner_info['ownerCode']}",
+                        "productFormType": "YP",
+                        "supplierCode": "S00004158",
+                        "updater": "刘春苗",
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type='YCRKD')['source_code']}",
+                        "outWarehouseName": "青岛仓"
+                    }
+                    response = requests.post(url, json=data,
+                                             headers=headers)
+                    return response.json()
+                elif owner_info['ownerCode'] == '01':
+                    dt_list = []
+                    count = 0
+                    for sku_detail in get_warehouse_inventory(base_url, headers, owner_info):
+                        if count >= 2:
+                            break
+                        dt_item = {
+                            "amount": 10000000,
+                            "departmentCode": "N0021",
+                            "inOrderQty": 1,
+                            "invalidDate": f"{sku_detail['invalidDate']}",
+                            "mainUnit": "罐",
+                            "orderLineNo": 1,
+                            "productionBatch": f"{sku_detail['productionBatch']}",
+                            "productionDate": f"{sku_detail['productionDate']}",
+                            "rowSupplierCode": "S00004158",
+                            "skuCode": f"{sku_detail['skuCode']}",
+                        }
+                        dt_list.append(dt_item)
+                    dt_list[0]['inOrderQty'] = int(sku_details[0]['perQty']) - 1
+                    data = {
+                        "businessType": 0,
+                        "companyCode": "2",
+                        "creator": "李鸿宾",
+                        "dtList": dt_list,
+                        "erpCreateTime": 1684981849000,
+                        "erpUpdateTime": 1684981850000,
+                        "orderPrice": 10000000,
+                        "orderStatus": 1,
+                        "orderType": "DBRK",
+                        "origNo": f"DBRK-{generate_number()}-{random.randint(1, 9999)}",
+                        "origPurchaseOrderNo": "DBRK-241231-005",
+                        "origSys": "CQ_ERP",
+                        "ownerCode": f"{owner_info['ownerCode']}",
+                        "productFormType": "YP",
+                        "supplierCode": "S00004158",
+                        "updater": "刘春苗",
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type='YCRKD')['source_code']}",
+                        "outWarehouseName": "青岛仓"
+                    }
+                    response = requests.post(url, json=data,
+                                             headers=headers)
+                    return response.json()
+            elif is_whole_piece == 1:
+                if owner_info['ownerCode'] == 'QDBYYYGF':
+                    dt_list = []
+                    count = 0
+                    for sku_detail in get_warehouse_inventory(base_url, headers, owner_info):
+                        if count >= 2:
+                            break
+                        dt_item = {
+                            "amount": 10000000,
+                            "departmentCode": "N0028",
+                            "inOrderQty": 1,
+                            "invalidDate": f"{sku_detail['invalidDate']}",
+                            "mainUnit": "罐",
+                            "orderLineNo": 1,
+                            "productionBatch": f"{sku_detail['productionBatch']}",
+                            "productionDate": f"{sku_detail['productionDate']}",
+                            "rowSupplierCode": "S00004158",
+                            "skuCode": f"{sku_detail['skuCode']}",
+                        }
+                        dt_list.append(dt_item)
+                    dt_list[0]['inOrderQty'] = int(sku_details[0]['perQty']) - 1
+                    data = {
+                        "businessType": 0,
+                        "companyCode": "50",
+                        "creator": "李鸿宾",
+                        "dtList": dt_list,
+                        "erpCreateTime": 1684981849000,
+                        "erpUpdateTime": 1684981850000,
+                        "orderPrice": 10000000,
+                        "orderStatus": 1,
+                        "orderType": "DBRK",
+                        "origNo": f"DBRK-{generate_number()}-{random.randint(1, 9999)}",
+                        "origPurchaseOrderNo": "DBRK-241231-005",
+                        "origSys": "CQ_ERP",
+                        "ownerCode": f"{owner_info['ownerCode']}",
+                        "productFormType": "YP",
+                        "supplierCode": "S00004158",
+                        "updater": "刘春苗",
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type='YCRKD')['source_code']}",
+                        "outWarehouseName": "青岛仓"
+                    }
+                    response = requests.post(url, json=data,
+                                             headers=headers)
+                    return response.json()
+                elif owner_info['ownerCode'] == '01':
+                    dt_list = []
+                    count = 0
+                    for sku_detail in get_warehouse_inventory(base_url, headers, owner_info):
+                        if count >= 2:
+                            break
+                        dt_item = {
+                            "amount": 10000000,
+                            "departmentCode": "N0021",
+                            "inOrderQty": 1,
+                            "invalidDate": f"{sku_detail['invalidDate']}",
+                            "mainUnit": "罐",
+                            "orderLineNo": 1,
+                            "productionBatch": f"{sku_detail['productionBatch']}",
+                            "productionDate": f"{sku_detail['productionDate']}",
+                            "rowSupplierCode": "S00004158",
+                            "skuCode": f"{sku_detail['skuCode']}",
+                        }
+                        dt_list.append(dt_item)
+                    dt_list[0]['inOrderQty'] = int(sku_details[0]['perQty']) - 1
+                    data = {
+                        "businessType": 0,
+                        "companyCode": "2",
+                        "creator": "李鸿宾",
+                        "dtList": dt_list,
+                        "erpCreateTime": 1684981849000,
+                        "erpUpdateTime": 1684981850000,
+                        "orderPrice": 10000000,
+                        "orderStatus": 1,
+                        "orderType": "DBRK",
+                        "origNo": f"DBRK-{generate_number()}-{random.randint(1, 9999)}",
+                        "origPurchaseOrderNo": "DBRK-241231-005",
+                        "origSys": "CQ_ERP",
+                        "ownerCode": f"{owner_info['ownerCode']}",
+                        "productFormType": "YP",
+                        "supplierCode": "S00004158",
+                        "updater": "刘春苗",
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type='YCRKD')['source_code']}",
+                        "outWarehouseName": "青岛仓"
+                    }
+                    response = requests.post(url, json=data,
+                                             headers=headers)
+                    return response.json()
+
+                else:
+                    return "ownerCode参数错误"

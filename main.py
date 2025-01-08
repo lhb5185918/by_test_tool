@@ -244,7 +244,7 @@ class LoginWindow(QWidget):
                 if user_info:
                     # 暂时断开信号连接
                     self.company_combo.blockSignals(True)
-                    
+
                     # 更新公司下拉框
                     self.company_combo.clear()
                     self.company_combo.addItems(user_info['companies'])
@@ -252,7 +252,7 @@ class LoginWindow(QWidget):
 
                     # 恢复信号连接
                     self.company_combo.blockSignals(False)
-                    
+
                     # 无论有几个公司，都选中第一个
                     if user_info['companies']:
                         self.company_combo.setCurrentIndex(0)
@@ -278,7 +278,7 @@ class LoginWindow(QWidget):
                 if result['code'] == 200 and result['obj']:
                     # 存储公司信息，用于后续获取companyCode
                     self.company_info = {
-                        company['companyShortName']: company['companyCode'] 
+                        company['companyShortName']: company['companyCode']
                         for company in result['obj']
                     }
                     # 从返回数据中提取公司名称列表
@@ -375,20 +375,20 @@ class LoginWindow(QWidget):
         # 获取当前选中的仓库名称和对应的仓库ID
         warehouse_name = self.warehouse_combo.currentText()
         warehouse_id = self.warehouse_info.get(warehouse_name)
-        
+
         print(f"打开主窗口时的仓库ID: {warehouse_id}")  # 调试信息
-        
+
         # 创建主窗口实例时传入仓库ID
         self.main_window = MainWindow(
             base_url=self.current_host,  # 传递当前环境的base_url
             headers=headers,  # 传递headers
         )
-        
+
         # 设置仓库ID
         self.main_window.set_warehouse_id(warehouse_id)
         # 设置仓库名称
         self.main_window.set_warehouse_name(warehouse_name)
-        
+
         # 显示主窗口
         self.main_window.show()
         self.close()  # 关闭登录窗口
@@ -405,42 +405,42 @@ class LoginWindow(QWidget):
                 company_code = self.company_info.get(company_name)
                 if not company_code:
                     raise Exception("未找到公司代码")
-                
+
                 print(f"选择的公司: {company_name}, 公司代码: {company_code}")
-                
+
                 # 先启用下拉框，避免界面卡死
                 self.warehouse_combo.setEnabled(True)
                 self.warehouse_combo.clear()
                 self.warehouse_combo.addItem("加载中...")
-                
+
                 # 添加0.5秒延迟
                 time.sleep(0.5)
-                
+
                 # 调用接口获取仓库信息
                 warehouses = self.get_warehouse_info(company_code)
                 print(f"获取到的仓库列表: {warehouses}")
-                
+
                 # 更新仓库下拉框
                 self.warehouse_combo.clear()
-                
+
                 if warehouses and len(warehouses) > 0:
                     print(f"正在添加仓库到下拉框: {warehouses}")
                     # 添加仓库选项
                     self.warehouse_combo.addItems(warehouses)
                     self.warehouse_combo.setEnabled(True)
-                    
+
                     # 无论有几个仓库，都选中第一个
                     self.warehouse_combo.setCurrentIndex(0)
-                    
+
                     print(f"仓库下拉框当前项目数: {self.warehouse_combo.count()}")
-                    
+
                     # 强制更新界面
                     self.warehouse_combo.update()
                 else:
                     print("没有找到仓库数据")
                     self.warehouse_combo.setEnabled(False)
                     self.show_error_message("该公司没有可用的仓库")
-                    
+
             except Exception as e:
                 print(f"处理仓库数据时出错: {str(e)}")
                 self.warehouse_combo.clear()
