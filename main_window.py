@@ -770,10 +770,10 @@ class MainWindow(QMainWindow):
 
             # 处理返回结果
             if isinstance(result, dict):
-                if result.get('code') == 200:
-                    QMessageBox.information(self, "成功", f"验收单创建成功\n单号: {result.get('obj', '')}")
+                if result['result'].get('code') == 200:
+                    QMessageBox.information(self, "成功", f"验收单创建成功\n单号: {result['result'].get('obj', '')}")
                 else:
-                    QMessageBox.warning(self, "错误", f"创建验收单失败: {result.get('msg', '未知错误')}")
+                    QMessageBox.warning(self, "错误", f"创建验收单失败: {result['result'].get('msg', '未知错误')}")
             else:
                 QMessageBox.warning(self, "错误", "创建验收单失败: 返回数据格式错误")
 
