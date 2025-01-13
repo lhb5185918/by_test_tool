@@ -19,7 +19,7 @@ class LoginWindow(QWidget):
 
     def initUI(self):
         # 设置窗口标题和大小
-        self.setWindowTitle('白羊一体化测试工具')
+        self.setWindowTitle('百洋一体化测试工具')
         self.resize(500, 600)  # 扩大窗口尺寸
 
         # 设置窗口背景色
@@ -493,7 +493,16 @@ class LoginWindow(QWidget):
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    login_window = LoginWindow()
-    login_window.show()
-    sys.exit(app.exec_())
+    try:
+        app = QApplication(sys.argv)
+        login_window = LoginWindow()
+        login_window.show()
+        sys.exit(app.exec_())
+    except Exception as e:
+        # 显示错误对话框
+        error_dialog = QMessageBox()
+        error_dialog.setIcon(QMessageBox.Critical)
+        error_dialog.setWindowTitle("错误")
+        error_dialog.setText(f"程序启动失败: {str(e)}")
+        error_dialog.setDetailedText(f"详细错误信息:\n{str(e)}")
+        error_dialog.exec_()
