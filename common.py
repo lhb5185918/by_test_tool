@@ -69,6 +69,7 @@ def get_owner_list(base_url, headers):
             "limit": 50
         }
         response = requests.post(url, json=data, headers=headers)
+        print(response.json())
         return response.json()
     except Exception as e:
         print(f"获取货主列表失败: {str(e)}")

@@ -39,7 +39,7 @@ def create_out_order(base_url, headers, order_type, owner_info, sku_details, war
                 if sku_detail['packageAttrName'] == '零货':
                     dt_item = {
                         "amount": 175000000,
-                        "assignedLot": f"{sku_details['productionBatch']}",
+                        "assignedLot": f"{sku_detail['productionBatch']}",
                         "productDate": f"{sku_detail['productionDate']}",
                         "invalidDate": f"{sku_detail['invalidDate']}",
                         "discountAmount": 175000000,
@@ -56,7 +56,7 @@ def create_out_order(base_url, headers, order_type, owner_info, sku_details, war
                 else:
                     dt_item = {
                         "amount": 175000000,
-                        "assignedLot": f"{sku_details['productionBatch']}",
+                        "assignedLot": f"{sku_detail['productionBatch']}",
                         "productDate": f"{sku_detail['productionDate']}",
                         "invalidDate": f"{sku_detail['invalidDate']}",
                         "discountAmount": 175000000,
@@ -122,7 +122,81 @@ def create_out_order(base_url, headers, order_type, owner_info, sku_details, war
                 "payType": "转账",
                 "buyerName": "李鸿宾"
             }
-            elif order_type == 'WHL':
+            response = requests.post(create_out_order_url, json=data, headers=headers)
+            return response.json()
+        elif order_type == 'WHL':
+            for sku_detail in sku_details:
+                if sku_detail['packageAttrName'] == '零货':
+                    dt_item = {
+                        "amount": 175000000,
+                        "assignedLot": f"{sku_details['productionBatch']}",
+                        "productDate": f"{sku_detail['productionDate']}",
+                        "invalidDate": f"{sku_detail['invalidDate']}",
+                        "discountAmount": 175000000,
+                        "limitValid": 0,
+                        "mainUnit": "盒",
+                        "outOrderQty": 1,
+                        "rowNo": 1,
+                        "skuCode": f"{sku_detail['skuCode']}",
+                        "putTogetherNo": "",
+                        "stockStatus": "HG",
+                        "upstreamInvoiceUrl": "https://img2.baidu.com/it/u=3734104099,2265105642&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500"
+                    }
+                    dt_list.append(dt_item)
+                else:
+                    dt_item = {
+                        "amount": 175000000,
+                        "assignedLot": f"{sku_details['productionBatch']}",
+                        "productDate": f"{sku_detail['productionDate']}",
+                        "invalidDate": f"{sku_detail['invalidDate']}",
+                        "discountAmount": 175000000,
+                        "limitValid": 0,
+                        "mainUnit": "盒",
+                        "outOrderQty": sku_detail['perQty'],
+                        "rowNo": 1,
+                        "skuCode": f"{sku_detail['skuCode']}",
+                        "putTogetherNo": "",
+                        "stockStatus": "HG",
+                        "upstreamInvoiceUrl": "https://img2.baidu.com/it/u=3734104099,2265105642&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500"
+                    }
+                    dt_list.append(dt_item)
+            data = {
+                "adminAreaCode": "辽宁省;大连市;金州区",
+                "carrierCode": "CY002",
+                "companyCode": "50",
+                "confirmTime": 1668408850000,
+                "contactAddr": "辽宁省大连市金州区 金石滩街道鲁能泰山7号2期168号菜鸟驿站",
+                "contactName": "雅婷",
+                "contactTel": "18888888888",
+                "creator": "wwx",
+                "customerCode": "11001413",
+                "customerName": "百洋易美官方店",
+                "customerType": "ONLINE_SHOP",
+                "discountPrice": 898000000,
+                "dtList": dt_list,
+                "endCustomer": "BYDP-10190002",
+                "erpCreateTime": 1668409157000,
+                "erpUpdateTime": 1668409157000,
+                "isPrintInvoice": 0,
+                "orderPrice": 898000000,
+                "orderStatus": 1,
+                "origNo": f"WDFHD-{generate_number()}-{random.randint(1, 9999)}",
+                "origSys": "CQ_ERP",
+                "origType": "OL_PCK",
+                "ownerCode": "QDBYYYGF",
+                "payMethod": "在线支付",
+                "pickUpType": "0",
+                "purchName": "雅婷",
+                "shopOrderNo": "20221114145410614268888",
+                "sourceCode": "",
+                "updater": "wwx",
+                "productFormType": "YP",
+                "departmentCode": "N0028",
+                "businessType": 0,
+                "warehouseCode": "50001"
+            }
+            response = requests.post(create_out_order_url, json=data, headers=headers)
+            return response.json()
     #
     # elif if owner_info['ownerCode'] == '01':
     #     pass

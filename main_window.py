@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QPushButton, QLabel, QComboBox, QLineEdit, QMessageBox
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QVariant
 from PyQt5.QtGui import QColor, QPainter, QPen
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout,
                              QHBoxLayout, QComboBox, QPushButton, QCheckBox,
@@ -13,6 +13,8 @@ from creat_asn_order import create_asn_order, make_put_shelf_data, put_shelf_dow
 from create_out_order import create_out_order
 import os
 import sys
+from PyQt5.QtWidgets import QListWidgetItem
+import json  # 添加到文件顶部的导入语句中
 
 
 def get_resource_path(relative_path):
@@ -128,6 +130,11 @@ class MainWindow(QMainWindow):
         # 添加新的属性来存储选中的出库商品数据
         self.selected_outbound_sku_details = []
 
+        # 初始化出库相关的按钮
+        self.generate_outbound_button = None
+        self.generate_pick_button = None
+        self.quick_outbound_button = None
+
         # 初始化UI
         self.initUI()
 
@@ -145,10 +152,16 @@ class MainWindow(QMainWindow):
         if hasattr(self, 'outbound_product_combo'):
             self.outbound_product_combo.currentIndexChanged.connect(self.on_outbound_product_selected)
 
-        # 初始化出库相关的按钮
-        self.generate_outbound_button = None
-        self.generate_pick_button = None
-        self.quick_outbound_button = None
+        # 确保按钮已经被创建
+        if not self.generate_outbound_button:
+            self.generate_outbound_button = LoadingButton('生成出库单')
+            self.generate_outbound_button.clicked.connect(self.generate_outbound)
+        if not self.generate_pick_button:
+            self.generate_pick_button = LoadingButton('生成拣货单')
+            self.generate_pick_button.clicked.connect(self.generate_pick)
+        if not self.quick_outbound_button:
+            self.quick_outbound_button = LoadingButton('一键出库')
+            self.quick_outbound_button.clicked.connect(self.quick_outbound)
 
     def load_sku_list(self):
         """加载商品列表"""
@@ -157,66 +170,74 @@ class MainWindow(QMainWindow):
                 QMessageBox.warning(self, '警告', '缺少必要的配置信息')
                 return
 
+            print("开始加载商品列表...")  # 添加调试信息
+
             # 根据不同的操作区域调用不同的接口
             if hasattr(self, 'trace_checkbox'):  # 入库操作管理
                 # 根据追溯码复选框状态决定是否查询药品
                 is_drug = 1 if self.trace_checkbox.isChecked() else 0
-                
+
                 # 调用入库商品列表接口
                 result = select_sku(
                     is_drug=is_drug,
                     base_url=self.base_url,
                     headers=self.headers
                 )
-                
+
                 if isinstance(result, dict) and result.get('code') == 200:
                     self.sku_list = result.get('obj', [])
                 else:
                     QMessageBox.warning(self, '警告', f'获取商品列表失败：{result.get("msg", "未知错误")}')
-                    
+
             else:  # 出库操作管理
                 # 获取当前选择的货主信息
                 current_text = self.outbound_owner_combo.currentText()
                 owner_info = self.owner_dict.get(current_text)
-                
+
                 if owner_info:
+                    print(f"正在获取货主 {owner_info.get('ownerName')} 的商品列表...")  # 添加调试信息
                     # 调用出库商品列表接口
                     result = get_out_sku_details(
                         base_url=self.base_url,
                         owner_info=owner_info,
                         headers=self.headers
                     )
-                    
+
                     if isinstance(result, list):
                         self.sku_list = result
+                        print(f"成功获取到 {len(result)} 个商品")  # 添加调试信息
                     else:
+                        print(f"获取商品列表失败: {result}")  # 添加调试信息
                         QMessageBox.warning(self, '警告', f'获取商品列表失败：{result}')
                 else:
                     QMessageBox.warning(self, '警告', '请先选择货主')
+                    return
 
             # 更新商品列表显示
             self.update_product_lists()
 
         except Exception as e:
-            print(f"发生异常: {str(e)}")
+            print(f"加载商品列表时发生异常: {str(e)}")
             QMessageBox.warning(self, '警告', f'获取商品列表失败：{str(e)}')
 
     def update_product_lists(self):
-        """更新商品列表"""
+        """更新商品列表显示"""
         try:
-            # 清空现有选项
+            # 清空现有列表
             if hasattr(self, 'product_list'):
                 self.product_list.clear()
             if hasattr(self, 'outbound_product_list'):
                 self.outbound_product_list.clear()
 
             # 获取当前选择的货主
-            storage_owner = self.storage_owner_combo.currentText() if hasattr(self, 'storage_owner_combo') else None
-            outbound_owner = self.outbound_owner_combo.currentText() if hasattr(self, 'outbound_owner_combo') else None
+            storage_owner = None
+            if hasattr(self, 'storage_owner_combo'):
+                storage_owner = self.storage_owner_combo.currentText()
 
-            # 添加商品选项
+            # 添加商品到列表
             for sku in self.sku_list:
                 if hasattr(self, 'trace_checkbox'):  # 入库操作管理
+                    # 入库相关的代码保持不变
                     sku_name = sku.get('skuName', '')
                     spec = sku.get('spec', '')
                     sku_code = sku.get('skuCode', '')
@@ -224,26 +245,40 @@ class MainWindow(QMainWindow):
                     owner_code = sku.get('ownerCode', '')
                     current_owner = f"{owner_name} ({owner_code})"
                     display_text = f"{sku_name} - {spec} - {sku_code}"
-                    
+
                     if not storage_owner or current_owner == storage_owner:
                         self.product_list.addItem(display_text)
-                else:  # 出库操作管理
-                    sku_name = sku.get('skuName', '')
-                    spec = sku.get('spec', '')
-                    sku_code = sku.get('skuCode', '')
-                    usable_qty = sku.get('usableQty', 0)
-                    package_attr = sku.get('packageAttrName', '')  # 获取包装规格
-                    
-                    # 构建显示文本，包含包装规格
-                    display_text = (
-                        f"{sku_name} - {spec}"
-                        f"{f' - {package_attr}' if package_attr else ''}"  # 如果有包装规格则显示
-                        f" - {sku_code} (可用库存: {usable_qty})"
-                    )
-                    
-                    self.outbound_product_list.addItem(display_text)
+
+                elif hasattr(self, 'outbound_product_list'):  # 出库操作管理
+                    try:
+                        # 创建列表项
+                        item = QListWidgetItem()
+                        
+                        # 构建显示文本
+                        display_text = (
+                            f"{sku.get('skuName', '')} - "
+                            f"{sku.get('spec', '')} - "
+                            f"{sku.get('packageAttrName', '整件')} - "
+                            f"{sku.get('skuCode', '')} (可用库存: {sku.get('usableQty', 0)})"
+                        )
+                        
+                        # 设置显示文本
+                        item.setText(display_text)
+                        
+                        # 直接存储完整的商品数据
+                        item.setData(Qt.UserRole, sku)
+                        
+                        # 添加到列表
+                        self.outbound_product_list.addItem(item)
+                        
+                    except Exception as e:
+                        print(f"处理出库商品时出错: {str(e)}")
+                        continue
+
+            print(f"商品列表更新完成，共 {len(self.sku_list)} 个商品")
 
         except Exception as e:
+            print(f"更新商品列表时发生错误: {str(e)}")
             QMessageBox.warning(self, '警告', f'更新商品列表失败：{str(e)}')
 
     def get_selected_sku_info(self, combo_box):
@@ -371,14 +406,13 @@ class MainWindow(QMainWindow):
         self.status_label = QLabel()
         self.status_label.setStyleSheet('''
             QLabel {
-                font-size: 13px;
-                color: #2c3e50;
-                padding: 15px;
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                                          stop:0 #f8f9fa, stop:1 #ffffff);
-                border: 1px solid #e0e0e0;
-                border-radius: 8px;
-                min-height: 80px;
+                background-color: #f8f9fa;
+                border: 1px solid #dcdcdc;
+                border-radius: 4px;
+                padding: 10px;
+                font-size: 14px;
+                min-height: 100px;
+                qproperty-alignment: AlignLeft | AlignTop;
             }
         ''')
         self.status_label.setWordWrap(True)  # 允许文本自动换行
@@ -719,21 +753,21 @@ class MainWindow(QMainWindow):
         checkbox_widget = QWidget()
         checkbox_layout = QHBoxLayout(checkbox_widget)
         checkbox_layout.setSpacing(20)
-        
+
         self.outbound_trace_checkbox = QCheckBox('是否需要采集追溯码')
         self.outbound_seed_checkbox = QCheckBox('是否播种')
-        
+
         checkbox_layout.addWidget(self.outbound_trace_checkbox)
         checkbox_layout.addWidget(self.outbound_seed_checkbox)
         checkbox_layout.addStretch()
-        
+
         content_layout.addWidget(checkbox_widget, 2, 0, 1, 3)
 
         # 创建商品选择
         product_label = QLabel('选择出库商品:')
         self.outbound_product_list = QListWidget()
         self.outbound_product_list.setSelectionMode(QListWidget.MultiSelection)
-        
+
         refresh_button = QPushButton('获取商品')
         refresh_button.clicked.connect(self.load_sku_list)
 
@@ -746,7 +780,7 @@ class MainWindow(QMainWindow):
         button_layout = QHBoxLayout(button_widget)
         button_layout.setSpacing(15)
 
-        # 初始化出库相关按钮
+        # 初始化出库相关按钮 - 使用 LoadingButton 而不是普通的 QPushButton
         self.generate_outbound_button = LoadingButton('生成出库单')
         self.generate_pick_button = LoadingButton('生成拣货单')
         self.quick_outbound_button = LoadingButton('一键出库')
@@ -835,7 +869,7 @@ class MainWindow(QMainWindow):
                 # 读取质检单号
                 qc_data = read_yaml('qc_data.yaml')
                 qc_no = qc_data.get('qcNo', '') if qc_data else ''
-                
+
                 success_message = (
                     f"验收单创建成功\n"
                     f"入库单号: {in_order_result['order_no']}\n"
@@ -948,7 +982,7 @@ class MainWindow(QMainWindow):
                 # 读取质检单号
                 qc_data = read_yaml('qc_data.yaml')
                 qc_no = qc_data.get('qcNo', '') if qc_data else ''
-                
+
                 success_message = (
                     f"一键入库成功\n"
                     f"入库单号: {in_order_result['order_no']}\n"
@@ -968,49 +1002,81 @@ class MainWindow(QMainWindow):
     def generate_outbound(self):
         """生成出库单"""
         try:
+            print("开始生成出库单...")  # 调试信息
+            print(f"按钮状态: {self.generate_outbound_button}")  # 检查按钮是否存在
+
+            if not self.generate_outbound_button:
+                print("警告：出库按钮未初始化")
+                self.generate_outbound_button = LoadingButton('生成出库单')
+                self.generate_outbound_button.clicked.connect(self.generate_outbound)
+
             self.generate_outbound_button.start_loading()
-            
+
             # 检查是否选择了商品
             if not self.selected_outbound_sku_details:
                 QMessageBox.warning(self, "警告", "请先选择要出库的商品")
                 return
-            
+
             # 获取选中的出库单类型
             selected_type = self.get_selected_outbound_type_value()
             if not selected_type:
                 QMessageBox.warning(self, "警告", "请选择出库单类型")
                 return
 
-            # 获取当前选中的货主名称
+            # 获取当前选中的货主信息
             current_text = self.outbound_owner_combo.currentText()
             owner_info = self.owner_dict.get(current_text)
-            owner_name = owner_info.get('ownerName') if owner_info else None
 
             # 检查仓库信息
-            if not self.warehouse_id or not owner_name:
-                QMessageBox.warning(self, "警告", "缺少仓库信息或货主名称，请确保已正确登录并选择货主")
+            if not self.warehouse_id or not self.warehouse_name or not owner_info:
+                QMessageBox.warning(self, "警告", "缺少仓库信息或货主信息，请确保已正确登录并选择货主")
                 return
 
-            # 获取播种标记
-            is_seed = 1 if self.outbound_seed_checkbox.isChecked() else 0
+            # 打印调试信息
+            print(f"warehouse_id: {self.warehouse_id}")
+            print(f"warehouse_name: {self.warehouse_name}")
+            print(f"owner_info: {owner_info}")
+            print(f"selected_type: {selected_type}")
+            print(f"sku_details: {self.selected_outbound_sku_details}")
 
             # 调用创建出库单方法
             result = create_out_order(
                 base_url=self.base_url,
                 headers=self.headers,
                 order_type=selected_type,
-                owner_info=self.current_owner,
+                owner_info=owner_info,
                 sku_details=self.selected_outbound_sku_details,
-                warehouse_code=self.warehouse_id,
-                is_seed=is_seed  # 添加播种标记参数
+                warehouse_id=self.warehouse_id,
+                warehouse_name=self.warehouse_name  # 添加仓库名称参数
             )
 
-            if isinstance(result, dict) and result.get('code') == 200:
-                QMessageBox.information(self, "成功", f"出库单创建成功\n订单号: {result.get('obj', {}).get('orderNo', '')}")
+            # 处理返回结果
+            if isinstance(result, dict):
+                if result.get('code') == 200:
+                    order_no = result.get('obj', {}).get('orderNo', '')
+                    success_message = (
+                        f"出库单创建成功\n"
+                        f"订单号: {order_no}\n"
+                        f"货主: {owner_info.get('ownerName')}\n"
+                        f"商品数量: {len(self.selected_outbound_sku_details)}个\n"
+                        f"仓库: {self.warehouse_name}"
+                    )
+                    QMessageBox.information(self, "成功", success_message)
+
+                    # 更新状态标签
+                    self.status_label.setText(
+                        f"出库单创建成功\n"
+                        f"订单号: {order_no}\n"
+                        f"货主: {owner_info.get('ownerName')}\n"
+                        f"订单类型: {self.outbound_type_combo.currentText()}\n"
+                        f"仓库: {self.warehouse_name}"
+                    )
+                else:
+                    error_msg = result.get('msg', '未知错误')
+                    QMessageBox.warning(self, "错误", f"创建出库单失败: {error_msg}")
             else:
-                error_msg = result.get('msg', '未知错误') if isinstance(result, dict) else str(result)
-                QMessageBox.warning(self, "错误", f"创建出库单失败: {error_msg}")
-            
+                QMessageBox.warning(self, "错误", f"创建出库单失败: {str(result)}")
+
         except Exception as e:
             print(f"生成出库单异常: {str(e)}")
             QMessageBox.warning(self, "错误", f"生成出库单时发生异常: {str(e)}")
@@ -1023,7 +1089,7 @@ class MainWindow(QMainWindow):
             self.generate_pick_button.start_loading()
             # TODO: 实现拣货单生成逻辑
             QMessageBox.information(self, "提示", "拣货单生成功能开发中...")
-            
+
         except Exception as e:
             print(f"生成拣货单异常: {str(e)}")
             QMessageBox.warning(self, "错误", f"生成拣货单时发生异常: {str(e)}")
@@ -1038,10 +1104,10 @@ class MainWindow(QMainWindow):
             selected_type = self.outbound_type_combo.currentText()
             need_trace = 1 if self.outbound_trace_checkbox.isChecked() else 0
             is_seed = 1 if self.outbound_seed_checkbox.isChecked() else 0  # 新增播种标记
-            
+
             # TODO: 实现一键出库逻辑
             QMessageBox.information(self, "提示", "一键出库功能开发中...")
-            
+
         except Exception as e:
             print(f"一键出库异常: {str(e)}")
             QMessageBox.warning(self, "错误", f"一键出库时发生异常: {str(e)}")
@@ -1187,86 +1253,93 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "错误", f"处理商品选择时出错: {str(e)}")
 
     def on_outbound_product_selected(self):
-        """处理出库商品选择变化"""
+        """处理出库商品选择事件"""
         try:
-            # 获取所有选中的商品
             selected_items = self.outbound_product_list.selectedItems()
+            self.selected_outbound_sku_details = []
+            
             if not selected_items:
                 self.status_label.setText("未选择任何商品")
                 return
-
-            # 清空之前存储的商品详情
-            self.selected_outbound_sku_details = []
             
-            # 收集所有选中商品的编码
-            sku_codes = []
+            # 分类存储整件和零货商品
+            whole_pieces = []
+            single_pieces = []
+            
+            # 遍历所有选中的商品项
             for item in selected_items:
-                try:
-                    current_text = item.text()
-                    # 从显示文本中提取SKU编码
-                    sku_code = current_text.split(' - ')[-1].split(' (')[0]
-                    sku_codes.append(sku_code)
-                except Exception as e:
-                    print(f"处理商品 {current_text} 时出错: {str(e)}")
-                    continue
-
-            if not sku_codes:
-                self.status_label.setText("无法解析商品编码")
-                return
-
-            # 从已加载的商品列表中获取详细信息
-            selected_skus = []
-            status_text = f"已选择 {len(sku_codes)} 个出库商品:\n"
+                item_text = item.text()
+                parts = item_text.split(' - ')
+                if len(parts) >= 4:  # 确保有足够的部分可以解析
+                    sku_name = parts[0]
+                    spec = parts[1]
+                    package_type = parts[2]  # 包装规格（整件/零货）
+                    # 处理最后一部分，它包含商品编码和库存信息
+                    last_part = parts[-1]
+                    sku_code = last_part.split(' (')[0]
+                    usable_qty = last_part.split('可用库存: ')[-1].rstrip(')')
+                    
+                    # 构建商品数据
+                    sku_data = {
+                        'skuName': sku_name,
+                        'spec': spec,
+                        'packageType': package_type,
+                        'skuCode': sku_code,
+                        'usableQty': float(usable_qty),
+                        'planQty': float(usable_qty)  # 设置计划数量等于可用数量
+                    }
+                    
+                    # 根据包装类型分类
+                    if '整件' in package_type:
+                        whole_pieces.append(sku_data)
+                    else:
+                        single_pieces.append(sku_data)
+                    
+                    self.selected_outbound_sku_details.append(sku_data)
             
-            for sku_code in sku_codes:
-                # 从self.sku_list中查找对应的商品信息
-                sku_detail = next((sku for sku in self.sku_list if sku.get('skuCode') == sku_code), None)
-                
-                if sku_detail:
-                    # 根据packageAttrName判断包装类型
-                    package_type = "PIECE" if "整件" in str(sku_detail.get('packageAttrName', '')) else "ZERO"
-                    
-                    # 添加批次、效期和包装信息
-                    sku_detail.update({
-                        "productionBatch": "20240814001",  # 默认生产批号
-                        "productionDate": "2024-01",       # 默认生产日期
-                        "invalidDate": "2024-12",          # 默认有效期
-                        "packageType": package_type,       # 根据packageAttrName设置包装类型
-                        "perQty": sku_detail.get('perQty', 0)  # 添加perQty字段
-                    })
-                    
-                    selected_skus.append(sku_detail)
-                    status_text += f"\n{len(selected_skus)}. {sku_detail.get('skuName', '未知商品')}:\n"
+            # 构建状态文本
+            status_text = f"已选择 {len(selected_items)} 个商品:\n"
+            
+            # 显示整件商品
+            if whole_pieces:
+                status_text += "\n=== 整件商品 ===\n"
+                for index, sku in enumerate(whole_pieces, 1):
+                    status_text += f"\n{index}. {sku['skuName']}:\n"
                     status_text += (
-                        f"   • 商品编码: {sku_detail.get('skuCode', '无')}\n"
-                        f"   • 规格: {sku_detail.get('spec', '无')}\n"
-                        f"   • 单位: {sku_detail.get('mainUnit', '无')}\n"
-                        f"   • 可用库存: {sku_detail.get('usableQty', 0)}\n"
-                        f"   • 包装规格: {sku_detail.get('packageAttrName', '无')}\n"
-                        f"   • 生产厂家: {sku_detail.get('mfg', '无')}\n"
-                        f"   • 批准文号: {sku_detail.get('approvalNumber', '无')}\n"
-                        f"   • 生产批号: {sku_detail.get('productionBatch')}\n"
-                        f"   • 生产日期: {sku_detail.get('productionDate')}\n"
-                        f"   • 有效期至: {sku_detail.get('invalidDate')}\n"
-                        f"   • 包装类型: {'整件' if sku_detail.get('packageType') == 'PIECE' else '零货'}\n"
-                        f"   • 每件数量: {sku_detail.get('perQty', 0)}\n"  # 添加perQty的显示
+                        f"   • 商品编码: {sku['skuCode']}\n"
+                        f"   • 规格: {sku['spec']}\n"
+                        f"   • 包装类型: {sku['packageType']}\n"
+                        f"   • 可用数量: {sku['usableQty']}\n"
+                        f"   • 计划出库数量: {sku['planQty']}\n"
                     )
-
-            if not selected_skus:
-                self.status_label.setText("未找到选中商品的详细信息")
-                return
-
-            # 存储选中的商品详情
-            self.selected_outbound_sku_details = selected_skus
             
-            # 更新状态显示
-            self.status_label.setText(status_text)
-            print(f"状态文本已更新: {status_text}")  # 添加调试信息
-
+            # 显示零货商品
+            if single_pieces:
+                status_text += "\n=== 零货商品 ===\n"
+                for index, sku in enumerate(single_pieces, 1):
+                    status_text += f"\n{index}. {sku['skuName']}:\n"
+                    status_text += (
+                        f"   • 商品编码: {sku['skuCode']}\n"
+                        f"   • 规格: {sku['spec']}\n"
+                        f"   • 包装类型: {sku['packageType']}\n"
+                        f"   • 可用数量: {sku['usableQty']}\n"
+                        f"   • 计划出库数量: {sku['planQty']}\n"
+                    )
+            
+            # 添加汇总信息
+            status_text += f"\n=== 汇总信息 ===\n"
+            status_text += f"整件商品数: {len(whole_pieces)} 个\n"
+            status_text += f"零货商品数: {len(single_pieces)} 个\n"
+            
+            # 更新状态标签显示
+            if self.selected_outbound_sku_details:
+                self.status_label.setText(status_text)
+            else:
+                self.status_label.setText("未能获取选中商品的详细信息")
+            
         except Exception as e:
-            print(f"处理商品选择异常: {str(e)}")
-            self.status_label.setText(f"处理商品选择时发生错误: {str(e)}")
-            QMessageBox.warning(self, "错误", f"处理商品选择时发生异常: {str(e)}")
+            print(f"选择商品时发生错误: {str(e)}")
+            QMessageBox.warning(self, '警告', f'选择商品失败：{str(e)}')
 
     def on_owner_selected(self):
         """处理入库货主选择变化"""
@@ -1307,7 +1380,7 @@ class MainWindow(QMainWindow):
                     'ownerName': owner_info.get('ownerName', ''),  # 添加货主名称
                     'id': owner_info.get('id', '')  # 添加货主ID
                 }
-                
+
                 # 更新状态显示
                 self.status_label.setText(
                     f"已选择出库货主:\n"
@@ -1336,14 +1409,14 @@ class MainWindow(QMainWindow):
                         sku_code = sku.get('skuCode', '')
                         usable_qty = sku.get('usableQty', 0)
                         package_attr = sku.get('packageAttrName', '')  # 获取包装规格
-                        
+
                         # 构建显示文本，包含包装规格
                         display_text = (
                             f"{sku_name} - {spec}"
                             f"{f' - {package_attr}' if package_attr else ''}"  # 如果有包装规格则显示
                             f" - {sku_code} (可用库存: {usable_qty})"
                         )
-                        
+
                         self.outbound_product_list.addItem(display_text)
                 else:
                     QMessageBox.warning(self, "警告", f"获取商品列表失败：{result}")
@@ -1432,7 +1505,7 @@ class MainWindow(QMainWindow):
                 # 读取质检单号
                 qc_data = read_yaml('qc_data.yaml')
                 qc_no = qc_data.get('qcNo', '') if qc_data else ''
-                
+
                 success_message = (
                     f"一键上架成功\n"
                     f"入库单号: {in_order_result['order_no']}\n"
@@ -1523,7 +1596,7 @@ class MainWindow(QMainWindow):
                 # 读取质检单号
                 qc_data = read_yaml('qc_data.yaml')
                 qc_no = qc_data.get('qcNo', '') if qc_data else ''
-                
+
                 success_message = (
                     f"上架单创建成功\n"
                     f"入库单号: {in_order_result['order_no']}\n"

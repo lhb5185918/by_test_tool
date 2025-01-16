@@ -1,22 +1,22 @@
-key: '2083374106153472'
-id: '2083374106153472'
+key: '2088608299274752'
+id: '2088608299274752'
 remark: ''
-createTime: '2025-01-11 17:57:44'
+createTime: '2025-01-15 10:42:14'
 creator: lhb
 creatorName: 李鸿宾
-updateTime: '2025-01-11 17:57:44'
+updateTime: '2025-01-15 10:42:14'
 updater: lhb
 updaterName: 李鸿宾
 companyCode: QDBYYYGF
 whId: 817929940341248
-qcNo: QC25011100115
+qcNo: QC25011500002
 ownerId: 103
 ownerName: 青岛百洋医药股份有限公司
 orgId: 1215770969117184
-orgName: 股份-KA零售事业部
-orgFullName: 百洋医药集团有限公司_青岛百洋医药股份有限公司_股份-KA零售事业部
-asnId: 2083374101467648
-asnNo: ASN25011100160
+orgName: 股份-KA事业部
+orgFullName: 百洋集团测试_青岛百洋医药股份有限公司_股份-KA事业部
+asnId: 2088608295506432
+asnNo: ASN25011500002
 qcStatus: CJ
 wmsBusinessType: TO_B
 productFormType: YP
@@ -33,13 +33,13 @@ qcId: null
 taskAssignId: null
 asnType: CGDD
 buyer: 李鸿宾
-erpOrderNo: CGDD-erp-20250111-5434
-origPurchaseOrderNo: CGDD-20250111-3216
+erpOrderNo: CGDD-erp-20250115-2541
+origPurchaseOrderNo: CGDD-20250115-8453
 orderSource: CQ_ERP
 recUserName: null
-recQty: 1100
+recQty: 99
 qcQty: 0
-waitQcQty: 1100
+waitQcQty: 99
 oneUserName: null
 twoUserName: null
 isPrintPutShelfOrder: null
