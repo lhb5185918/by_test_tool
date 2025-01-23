@@ -5,6 +5,9 @@ import random
 import yaml  # 添加到文件顶部的导入语句中
 import os
 import sys
+import websocket  # 需要先 pip install websocket-client
+import json
+import threading
 
 
 def generate_number(sequence=15):
@@ -40,6 +43,7 @@ def select_sku(is_drug, base_url, headers):
         "idStr": None,
         "ownerId": None,
         "isDrugSuperCode": 0,
+        "isDoubleCheck": 0,
         "page": 1,
         "limit": 50,
         "orderByColumnList": None
@@ -47,10 +51,12 @@ def select_sku(is_drug, base_url, headers):
     if is_drug == 1:
         data["isDrugSuperCode"] = 1
         response = requests.post(url, json=data, headers=headers)
+        res = response.json()
         return response.json()
     elif is_drug == 0:
         data["isDrugSuperCode"] = 0
         response = requests.post(url, json=data, headers=headers)
+        res = response.json()
         return response.json()
     else:
         return "is_drug参数错误"
@@ -186,7 +192,7 @@ def get_sku_detail(base_url, headers, sku_code):
         return {"error": f"获取商品明细失败: {str(e)}"}
 
 
-def get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type=None):
+def get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type=None, owner_info=None):
     """获取仓库编码"""
     url = f"{base_url}/oauth/password/unencrypted"
     data = {"userNo": "lhb2", "pwd": "Lhx7758521!", "platForm": "Web", "companyCode": "QDBYYYGF", "whId": "",
@@ -194,18 +200,22 @@ def get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type=None):
     response = requests.post(url=url, json=data, headers={'Content-Type': 'application/json'})
     token = response.json().get('obj').get('token')
     headers = {'Content-Type': 'application/json', 'Authorization': token}
+
+    # 获取仓库列表
     select_warehouse_code_url = f"{base_url}/oms/base/whOrig/pageInfo"
     select_warehouse_code_data = {
         "orderByColumnList": None,
         "page": 1,
         "limit": 50
     }
-    select_warehouse_code_response = requests.post(url=select_warehouse_code_url, json=select_warehouse_code_data,
+    select_warehouse_code_response = requests.post(url=select_warehouse_code_url,
+                                                   json=select_warehouse_code_data,
                                                    headers=headers)
+    warehouse_list = select_warehouse_code_response.json()['obj']
 
-    # 如果order_type不为None，返回source_code和target_code
+    # 处理方式一：返回source_code和target_code
     if order_type:
-        for warehouse in select_warehouse_code_response.json()['obj']:
+        for warehouse in warehouse_list:
             if warehouse['whId'] == warehouse_id and warehouse['origCompanyName'] == warehouse_name:
                 if warehouse['origCompanyName'] == '青岛百洋医药股份有限公司':
                     if warehouse['origCode'] == '50001':
@@ -220,12 +230,22 @@ def get_warehouse_code(base_url, warehouse_id, warehouse_name, order_type=None):
         # 如果没有找到匹配的仓库，返回默认值
         return {"source_code": "50001", "target_code": "50002"}
 
-    # 如果order_type为None，返回单个仓库编码
+    # 处理方式二：返回单个仓库编码
     else:
-        for warehouse in select_warehouse_code_response.json()['obj']:
+        # 如果有owner_info，使用owner_info匹配
+        if owner_info:
+            for warehouse in warehouse_list:
+                if (warehouse['whId'] == warehouse_id and
+                        warehouse['origCompanyName'] == warehouse_name and
+                        owner_info['origCompanyCode'] == warehouse['origCompanyCode']):
+                    return warehouse['origCode']
+
+        # 如果没有owner_info或上面没找到，使用简单匹配
+        for warehouse in warehouse_list:
             if warehouse['whId'] == warehouse_id and warehouse['origCompanyName'] == warehouse_name:
                 return warehouse['origCode']
-        # 如果没有找到匹配的仓库，返回默认值
+
+        # 如果都没找到，返回默认值
         return "50001"
 
 
@@ -413,72 +433,303 @@ def add_check_status_to_wait_put_list(data_dict):
     return data_dict
 
 
-def get_out_sku_details(base_url, owner_info, headers):
+def get_out_sku_details(base_url, owner_info, headers, is_drug=0):
     """获取出库商品库存信息"""
     select_sku_inventory_url = f"{base_url}/wms/report/stock/stockInfoRpt/pageInfo"
     inventory_list = []
-    
+    all_sku_codes = []
+
     try:
         if owner_info['ownerCode'] == 'QDBYYYGF':
-            select_sku_inventory_data = {
-                "ownerId": "103",
-                "orgIdList": [
-                    "1215770969117184"
-                ],
-                "stockStatusList": [
-                    "HG"
-                ],
-                "enterWarehouseStatus": "SJWC",
-                "stockSourceList": [
-                    "PT"
-                ],
-                "skuCategoryIdList": [
-                    1114711910617600
-                ],
-                "orderByColumnList": [
-                    "instore_date desc"
-                ],
-                "page": 1,
-                "limit": 100
-            }
-            select_sku_inventory_result = requests.post(select_sku_inventory_url, json=select_sku_inventory_data,
-                                                      headers=headers).json()
-            for sku_detail in select_sku_inventory_result['obj']:
-                if sku_detail['usableQty'] > 0:
-                    inventory_list.append(sku_detail)
+            # 分页获取库存信息
+            page = 1
+            while True:
+                select_sku_inventory_data = {
+                    "ownerId": "103",
+                    "orgIdList": ["1215770969117184"],
+                    "stockStatusList": ["HG"],
+                    "enterWarehouseStatus": "SJWC",
+                    "stockSourceList": ["PT"],
+                    "skuCategoryIdList": [1114711910617600],
+                    "orderByColumnList": ["instore_date desc"],
+                    "page": page,
+                    "limit": 100
+                }
+
+                inventory_response = requests.post(
+                    select_sku_inventory_url,
+                    json=select_sku_inventory_data,
+                    headers=headers
+                ).json()
+
+                # 收集有库存的商品编码
+                for sku_detail in inventory_response['obj']:
+                    if sku_detail['usableQty'] > 0:
+                        # 判断是否为整件商品
+                        if sku_detail['packageAttrName'] == '整件':
+                            # 判断每箱数量是否为整数
+                            if sku_detail['usableQty'] % sku_detail['perQty'] == 0:
+                                all_sku_codes.append(sku_detail['skuCode'])
+                        else:
+                            # 非整件商品直接添加
+                            all_sku_codes.append(sku_detail['skuCode'])
+
+                # 判断是否还有下一页
+                if len(inventory_response['obj']) < 100:
+                    break
+                page += 1
+
+            if all_sku_codes:
+                # 分页查询商品追溯码状态
+                drug_sku_codes = set()
+                page = 1
+                chunk_size = 100  # 每次查询的商品数量
+
+                while True:
+                    # 计算当前页的商品编码范围
+                    start_idx = (page - 1) * chunk_size
+                    end_idx = min(start_idx + chunk_size, len(all_sku_codes))
+                    current_sku_codes = all_sku_codes[start_idx:end_idx]
+
+                    if not current_sku_codes:
+                        break
+
+                    select_drug_data = {
+                        "productFormType": "YP",
+                        "ownerId": "103",
+                        "skuCodes": ",".join(current_sku_codes),
+                        "isDrugSuperCode": 1,
+                        "page": 1,
+                        "limit": 100,
+                        "orderByColumnList": None
+                    }
+
+                    drug_response = requests.post(
+                        f"{base_url}/wms/sku/sku/pageInfo",
+                        json=select_drug_data,
+                        headers=headers
+                    ).json()
+
+                    # 收集需要追溯码的商品编码
+                    drug_sku_codes.update(
+                        sku['skuCode'] for sku in drug_response.get('obj', [])
+                    )
+
+                    page += 1
+
+                # 重新遍历库存数据，根据追溯码状态筛选
+                page = 1
+                while True:
+                    select_sku_inventory_data['page'] = page
+                    inventory_response = requests.post(
+                        select_sku_inventory_url,
+                        json=select_sku_inventory_data,
+                        headers=headers
+                    ).json()
+
+                    for sku_detail in inventory_response['obj']:
+                        if sku_detail['usableQty'] > 0:
+                            sku_code = sku_detail['skuCode']
+                            # 判断是否为整件商品
+                            if sku_detail['packageAttrName'] == '整件':
+                                # 判断每箱数量是否为整数
+                                if sku_detail['usableQty'] % sku_detail['perQty'] == 0:
+                                    if is_drug == 1 and sku_code in drug_sku_codes:
+                                        inventory_list.append(sku_detail)
+                                    elif is_drug == 0 and sku_code not in drug_sku_codes:
+                                        inventory_list.append(sku_detail)
+                            else:
+                                # 非整件商品直接添加
+                                if is_drug == 1 and sku_code in drug_sku_codes:
+                                    inventory_list.append(sku_detail)
+                                elif is_drug == 0 and sku_code not in drug_sku_codes:
+                                    inventory_list.append(sku_detail)
+
+                    if len(inventory_response['obj']) < 100:
+                        break
+                    page += 1
+
             return inventory_list
 
         elif owner_info['ownerCode'] == '01':
-            select_sku_inventory_data = {
-                "ownerId": "100",
-                "orgIdList": [
-                    "1098994695180800"
-                ],
-                "stockStatusList": [
-                    "HG"
-                ],
-                "enterWarehouseStatus": "SJWC",
-                "stockSourceList": [
-                    "PT"
-                ],
-                "skuCategoryIdList": [
-                    1114711910617600
-                ],
-                "orderByColumnList": [
-                    "instore_date desc"
-                ],
-                "page": 1,
-                "limit": 100
-            }
-            select_sku_inventory_result = requests.post(select_sku_inventory_url, json=select_sku_inventory_data,
-                                                      headers=headers).json()
-            for sku_detail in select_sku_inventory_result['obj']:
-                if sku_detail['usableQty'] > 0:
-                    inventory_list.append(sku_detail)
+            # 分页获取库存信息
+            page = 1
+            while True:
+                select_sku_inventory_data = {
+                    "ownerId": "100",
+                    "orgIdList": ["1098994695180800"],
+                    "stockStatusList": ["HG"],
+                    "enterWarehouseStatus": "SJWC",
+                    "stockSourceList": ["PT"],
+                    "skuCategoryIdList": [1114711910617600],
+                    "orderByColumnList": ["instore_date desc"],
+                    "page": page,
+                    "limit": 100
+                }
+
+                inventory_response = requests.post(
+                    select_sku_inventory_url,
+                    json=select_sku_inventory_data,
+                    headers=headers
+                ).json()
+
+                # 收集有库存的商品编码
+                for sku_detail in inventory_response['obj']:
+                    if sku_detail['usableQty'] > 0:
+                        # 判断是否为整件商品
+                        if sku_detail['packageAttrName'] == '整件':
+                            # 判断每箱数量是否为整数
+                            if sku_detail['usableQty'] % sku_detail['perQty'] == 0:
+                                all_sku_codes.append(sku_detail['skuCode'])
+                        else:
+                            # 非整件商品直接添加
+                            all_sku_codes.append(sku_detail['skuCode'])
+
+                if len(inventory_response['obj']) < 100:
+                    break
+                page += 1
+
+            if all_sku_codes:
+                # 分页查询商品追溯码状态
+                drug_sku_codes = set()
+                page = 1
+                chunk_size = 100
+
+                while True:
+                    start_idx = (page - 1) * chunk_size
+                    end_idx = min(start_idx + chunk_size, len(all_sku_codes))
+                    current_sku_codes = all_sku_codes[start_idx:end_idx]
+
+                    if not current_sku_codes:
+                        break
+
+                    select_drug_data = {
+                        "productFormType": "YP",
+                        "ownerId": "100",  # 修改为对应的货主ID
+                        "skuCodes": ",".join(current_sku_codes),
+                        "isDrugSuperCode": 1,
+                        "page": 1,
+                        "limit": 100,
+                        "orderByColumnList": None
+                    }
+
+                    drug_response = requests.post(
+                        f"{base_url}/wms/sku/sku/pageInfo",
+                        json=select_drug_data,
+                        headers=headers
+                    ).json()
+
+                    drug_sku_codes.update(
+                        sku['skuCode'] for sku in drug_response.get('obj', [])
+                    )
+
+                    page += 1
+
+                # 重新遍历库存数据，根据追溯码状态筛选
+                page = 1
+                while True:
+                    select_sku_inventory_data['page'] = page
+                    inventory_response = requests.post(
+                        select_sku_inventory_url,
+                        json=select_sku_inventory_data,
+                        headers=headers
+                    ).json()
+
+                    for sku_detail in inventory_response['obj']:
+                        if sku_detail['usableQty'] > 0:
+                            sku_code = sku_detail['skuCode']
+                            # 判断是否为整件商品
+                            if sku_detail['packageAttrName'] == '整件':
+                                # 判断每箱数量是否为整数
+                                if sku_detail['usableQty'] % sku_detail['perQty'] == 0:
+                                    if is_drug == 1 and sku_code in drug_sku_codes:
+                                        inventory_list.append(sku_detail)
+                                    elif is_drug == 0 and sku_code not in drug_sku_codes:
+                                        inventory_list.append(sku_detail)
+                            else:
+                                # 非整件商品直接添加
+                                if is_drug == 1 and sku_code in drug_sku_codes:
+                                    inventory_list.append(sku_detail)
+                                elif is_drug == 0 and sku_code not in drug_sku_codes:
+                                    inventory_list.append(sku_detail)
+
+                    if len(inventory_response['obj']) < 100:
+                        break
+                    page += 1
+
             return inventory_list
+
         else:
             return "暂不支持该货主"
-            
+
     except Exception as e:
         print(f"获取出库商品库存信息失败: {str(e)}")
         return []
+
+
+def get_user_info(base_url, headers, username, user_no):
+    user_id_url = f'{base_url}/wms/org/user/queryUserCbList'
+    user_id_data = {
+        "queryText": f"{username}"
+    }
+    user_id_response = requests.post(user_id_url, json=user_id_data, headers=headers).json()['obj']
+    for user in user_id_response:
+        if user['userName'] == username and user['userNo'] == user_no:
+            return {"id": user['id']}
+        else:
+            continue
+
+
+def reconnect_websocket(base_url, warehouse_id, user_no):
+    """重新连接WebSocket"""
+    try:
+        # 从base_url中提取域名和端口
+        domain_port = base_url.split('//')[1]  # 获取 bswms-uat-01.baheal.com:7777
+
+        # 构建WebSocket URL
+        ws_url = f"ws://{domain_port}/webSocket/webSocket/customWebSocketHandler?userId={warehouse_id}_PC_PICK_{user_no}"
+
+        # 创建WebSocket连接
+        ws = websocket.WebSocket()
+        ws.connect(ws_url)
+
+        # 创建心跳线程保持连接
+        def heartbeat():
+            while True:
+                try:
+                    ws.send(json.dumps({"type": "heartbeat"}))
+                    time.sleep(30)  # 每30秒发送一次心跳
+                except:
+                    break
+
+        heartbeat_thread = threading.Thread(target=heartbeat)
+        heartbeat_thread.daemon = True  # 设置为守护线程
+        heartbeat_thread.start()
+
+        return {
+            'code': 200,
+            'msg': '连接成功',
+            'ws': ws  # 返回WebSocket连接对象
+        }
+
+    except Exception as e:
+        return {
+            'code': 500,
+            'msg': f'连接异常: {str(e)}'
+        }
+
+
+def close_websocket(ws):
+    """关闭WebSocket连接"""
+    try:
+        if ws:
+            ws.close()
+        return {
+            'code': 200,
+            'msg': '连接已关闭'
+        }
+    except Exception as e:
+        return {
+            'code': 500,
+            'msg': f'关闭连接异常: {str(e)}'
+        }

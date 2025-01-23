@@ -1,0 +1,135 @@
+key: '2188057515299328'
+id: '2188057515299328'
+remark: ''
+createTime: '2025-03-26 16:47:12'
+creator: lhb
+creatorName: 李鸿宾
+updateTime: '2025-03-26 16:47:12'
+updater: lhb
+updaterName: 李鸿宾
+companyCode: QDBYYYGF
+whId: 817929940341248
+orgId: 1215770969117184
+orgName: 股份-KA事业部
+orgFullName: 百洋集团测试_青岛百洋医药股份有限公司_股份-KA事业部
+ownerId: 103
+ownerName: 青岛百洋医药股份有限公司
+outOrderNo: CKD250326000004
+orderType: FHD
+jobType: PTDD
+wmsBusinessType: TO_B
+orderStatus: NEW_CREATE
+productFormType: YP
+orderSource: CQ_ERP
+erpOrderNo: WDFHD-20250326-5795
+customerId: 2
+customerName: 默认客户
+expOutTime: null
+partnerId: 1114732160274944
+partnerName: 天津大田运输服务有限公司青岛分公司
+takeDeliveryMethod: TY
+isHasInvoice: 0
+isPrescription: 0
+country: CHN
+provinceId: 6
+cityId: 38
+areaId: 444
+addr: 辽宁省大连市金州区 金石滩街道鲁能泰山7号2期168号菜鸟驿站
+receiver: 雅婷
+receiverTel: '18888888888'
+partnerStoreId: 1116071662129664
+partnerStoreName: 青岛百洋健康药房连锁有限公司青医东院便民药房
+isFrozen: 0
+isError: 0
+isCancel: 0
+optimistic: 0
+orderTypeName: 网店发货单
+jobTypeName: 普通订单
+wmsBusinessTypeName: ToB
+orderStatusName: 新创建
+productFormTypeName: 药品
+orderSourceName: 苍穹ERP
+takeDeliveryMethodName: 托运
+isPrescriptionName: 否
+isFrozenName: 否
+isCancelName: 是
+erpCreatorName: wwx
+erpCreateTime: '2022-11-14 14:59:17'
+erpUpdaterName: wwx
+erpUpdateTime: '2022-11-14 14:59:17'
+saleDepartmentOrgName: null
+saleZoneOrgName: null
+saleOfficeOrgName: null
+contactUnit: 个人
+shopOrderNo: '20221114145410614268888'
+orderPrice: 898.0
+planShipDate: null
+planShipTime: null
+returnReason: null
+businessDepartment: null
+extend:
+  key: '2188057515299328'
+  id: '2188057515299328'
+  remark: ''
+  createTime: '2025-03-26 16:47:12'
+  creator: lhb
+  creatorName: 李鸿宾
+  updateTime: '2025-03-26 16:47:12'
+  updater: lhb
+  updaterName: 李鸿宾
+  outOrderId: 2188057515299328
+  pickUpType: '0'
+  shopOrderNo: '20221114145410614268888'
+  payMethod: 在线支付
+  shopCode: ''
+  shopName: ''
+  customerCode: '11001413'
+  customerType: ONLINE_SHOP
+  ownerCode: QDBYYYGF
+  supplierCode: ''
+  carrierCode: CY002
+  sourceCode: ''
+  buyerRemark: ''
+  buyerMsg: ''
+  sellerRemark: ''
+  taxType: ''
+  taxIdNum: ''
+  invoiceTitle: ''
+  invoiceType: ''
+  orderPrice: 898.0
+  warehouseCode: '50001'
+  erpCreateTime: '2022-11-14 14:59:17'
+  erpUpdateTime: '2022-11-14 14:59:17'
+  endCustomer: BYDP-10190002
+  purchName: 雅婷
+  contactPhone: null
+  adminAreaCode: 辽宁省;大连市;金州区
+  emailAddr: null
+  discountPrice: 898.0
+  confirmTime: '2022-11-14 14:54:10'
+  supplierId: null
+  supplierName: null
+  provinceName: 辽宁省
+  cityName: 大连市
+  areaName: 金州区
+  qmCustomerId: null
+  buyerName: null
+  qimenOaid: ''
+  origCompanyCode: '50'
+  businessDepartment: null
+  ecpOrderNo: null
+  businessType: null
+  isModifyPricePrint: null
+  planShipDate: null
+  planShipTime: null
+  orderPrintType: null
+  isPrintUpstreamOrder: null
+  isPrintUpstreamInvoice: null
+  businessManager: null
+  erpCreatorName: wwx
+  erpUpdaterName: wwx
+  saleDepartmentOrgId: null
+  saleZoneOrgId: null
+  saleOfficeOrgId: null
+  erpOutOrderNo: null
+dtVOList: null

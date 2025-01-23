@@ -6,7 +6,7 @@ ENVIRONMENTS = {
     "uat环境": {
         "host": "http://bswms-uat-01.baheal.com:7777"
     },
-    "生产环境": {
-        "host": "http://prod-api.example.com"
+    "基线环境": {
+        "host": "http://192.168.111.232:17777"
     }
 } 

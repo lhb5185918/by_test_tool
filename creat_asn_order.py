@@ -11,12 +11,13 @@ def create_asn_order(base_url, headers, owner_info):
     order_id_url = f"{base_url}/wms/order/inOrder/pageInfo"
     order_id_data = {
         "orderByColumnList": None,
-        "createTimeFm": "2025-01-01",
+        "createTimeFm": "2025-01-01 00:00:00",
         "tempControlList": [],
         "erpOrderNo": f"{erp_no}",
         "page": 1,
         "limit": 100  # 增加限制数量
     }
+    print(requests.post(order_id_url, json=order_id_data, headers=headers).json())
     in_order_data_dict = requests.post(order_id_url, json=order_id_data, headers=headers).json()['obj'][0]
 
     # 获取待处理的入库单明细
@@ -94,21 +95,24 @@ def create_asn_order(base_url, headers, owner_info):
     # 保存验收单
     rec_save_url = f"{base_url}/wms/ib/rec/recSave"
     rec_save_result = requests.post(rec_save_url, json=select_asn_result_dict, headers=headers).json()
+    res = rec_save_result
+    if rec_save_result['code'] == 200:
+        # 获取质检单信息
+        ac_data_url = f"{base_url}/wms/ib/qc/pageInfo"
+        qc_data_data = {
+            "orderByColumnList": None,
+            "createTimeFm": "2025-01-01",
+            "skuCategoryIdList": [],
+            "erpOrderNo": f"{erp_no}",
+            "page": 1,
+            "limit": 50
+        }
+        qc_data = requests.post(ac_data_url, json=qc_data_data, headers=headers).json()['obj'][0]
+        write_yaml('qc_data.yaml', qc_data)
 
-    # 获取质检单信息
-    ac_data_url = f"{base_url}/wms/ib/qc/pageInfo"
-    qc_data_data = {
-        "orderByColumnList": None,
-        "createTimeFm": "2025-01-01",
-        "skuCategoryIdList": [],
-        "erpOrderNo": f"{erp_no}",
-        "page": 1,
-        "limit": 50
-    }
-    qc_data = requests.post(ac_data_url, json=qc_data_data, headers=headers).json()['obj'][0]
-    write_yaml('qc_data.yaml', qc_data)
-
-    return {"erp_no": erp_no, "asn_no": rec_save_result['obj']['asnNo'], "qc_no": qc_data['qcNo']}
+        return {"code": 200, "erp_no": erp_no, "asn_no": rec_save_result['obj']['asnNo'], "qc_no": qc_data['qcNo']}
+    else:
+        return rec_save_result
 
 
 def make_put_shelf_data(base_url, headers, owner_info):
@@ -146,6 +150,8 @@ def put_shelf_down(base_url, headers, owner_info):
         "page": 1,
         "limit": 50
     }
+    put_shelf_result1 = requests.post(put_shelf_id_url, json=put_shelf_id_data, headers=headers).json()
+    res = put_shelf_result1
     put_shelf_result = requests.post(put_shelf_id_url, json=put_shelf_id_data, headers=headers).json()['obj'][0]
     put_shelf_resave_url = f"{base_url}/wms/ib/putShelf/receiveTask"
     put_shelf_resave_data = {

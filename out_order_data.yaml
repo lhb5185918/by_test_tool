@@ -1,0 +1,46 @@
+adminAreaCode: 辽宁省;大连市;金州区
+carrierCode: CY002
+companyCode: '50'
+confirmTime: 1668408850000
+contactAddr: 辽宁省大连市金州区 金石滩街道鲁能泰山7号2期168号菜鸟驿站
+contactName: 雅婷
+contactTel: '18888888888'
+creator: wwx
+customerCode: '11001413'
+customerName: 百洋易美官方店
+customerType: ONLINE_SHOP
+discountPrice: 898000000
+dtList:
+- amount: 175000000
+  assignedLot: '20250102001'
+  productDate: 2025-01
+  invalidDate: 2025-12
+  discountAmount: 175000000
+  limitValid: 0
+  mainUnit: 盒
+  outOrderQty: 1
+  rowNo: 1
+  skuCode: M7003
+  putTogetherNo: ''
+  stockStatus: HG
+  upstreamInvoiceUrl: https://img2.baidu.com/it/u=3734104099,2265105642&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500
+endCustomer: BYDP-10190002
+erpCreateTime: 1668409157000
+erpUpdateTime: 1668409157000
+isPrintInvoice: 0
+orderPrice: 898000000
+orderStatus: 1
+origNo: WDFHD-20250326-5795
+origSys: CQ_ERP
+origType: OL_PCK
+ownerCode: QDBYYYGF
+payMethod: 在线支付
+pickUpType: '0'
+purchName: 雅婷
+shopOrderNo: '20221114145410614268888'
+sourceCode: ''
+updater: wwx
+productFormType: YP
+departmentCode: N0028
+businessType: 0
+warehouseCode: '50001'

@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import os
 block_cipher = None
 
 # 添加数据文件
@@ -7,7 +8,13 @@ added_files = [
     ('config.py', '.'),
     ('in_order_data.yaml', '.'),
     ('qc_data.yaml', '.'),
-    ('ac_data.yaml', '.')
+    ('ac_data.yaml', '.'),
+    ('main_window.py', '.'),
+    ('create_out_order_sop.py', '.'),
+    ('create_out_order.py', '.'),
+    ('common.py', '.'),
+    ('create_in_order.py', '.'),
+    ('creat_asn_order.py', '.')
 ]
 
 a = Analysis(
@@ -17,9 +24,17 @@ a = Analysis(
     datas=added_files,  # 添加数据文件
     hiddenimports=[
         'PyQt5',
+        'PyQt5.QtCore',
+        'PyQt5.QtGui',
+        'PyQt5.QtWidgets',
         'requests',
         'yaml',
         'datetime',
+        'json',
+        'time',
+        'random',
+        'os',
+        'sys'
     ],
     hookspath=[],
     hooksconfig={},
@@ -57,4 +72,4 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon='icon.ico' if os.path.exists('icon.ico') else None,
-) 
+)

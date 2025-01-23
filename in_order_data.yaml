@@ -4,23 +4,35 @@ companyCode: '50'
 creator: 李鸿宾
 extendOne: 山东省青岛市市北区
 dtList:
-- amount: 16000.12
+- amount: 15000000000
   departmentCode: N0028
-  inOrderQty: 99
+  inOrderQty: 1001
   mainUnit: 瓶
   orderLineNo: 1
-  rowSupplierCode: S00024171
-  skuCode: M12321321
+  skuCode: M12303
+  productionBatch: '20250326'
   productionDate: 2025-01
   invalidDate: 2025-12
-  productionBatch: '20250115'
+  rowSupplierCode: S00024171
+  buyer: 李鸿宾
+- amount: 15000000000
+  departmentCode: N0028
+  inOrderQty: 1001
+  mainUnit: 瓶
+  orderLineNo: 1
+  skuCode: M12302
+  productionBatch: '20250326'
+  productionDate: 2025-01
+  invalidDate: 2025-12
+  rowSupplierCode: S00024171
+  buyer: 李鸿宾
 erpCreateTime: 1666606057000
 erpUpdateTime: 1666607051000
 orderPrice: 738097330000
 orderStatus: 1
 orderType: INT
-origNo: CGDD-erp-20250115-2541
-origPurchaseOrderNo: CGDD-20250115-8453
+origNo: CGDD-erp-20250326-3225
+origPurchaseOrderNo: CGDD-20250326-1529
 origSys: CQ_ERP
 ownerCode: QDBYYYGF
 productFormType: YP

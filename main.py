@@ -17,6 +17,10 @@ class LoginWindow(QWidget):
         self.warehouse_info = {}  # 存储仓库信息
         self.initUI()
 
+    def generate_receipt(self):
+        """生成小票的方法"""
+        pass  # 这里可以根据需要实现具体的小票生成逻辑
+        
     def initUI(self):
         # 设置窗口标题和大小
         self.setWindowTitle('百洋一体化测试工具')
@@ -345,6 +349,8 @@ class LoginWindow(QWidget):
                 if result.get('code') == 200:
                     # 存储token
                     token = result.get('obj', {}).get('token')
+                    username = result['obj']['user']['userName']
+                    user_no = result['obj']['user']['userNo']
                     if token:
                         # 构造headers
                         headers = {
@@ -352,7 +358,7 @@ class LoginWindow(QWidget):
                             'Content-Type': 'application/json'
                         }
                         self.show_success_message("登录成功")
-                        self.open_main_window(headers)  # 传递headers给主窗口
+                        self.open_main_window(headers, username, user_no)  # 传递headers给主窗口
                     else:
                         self.show_error_message("登录成功但未获取到token")
                 else:
@@ -370,7 +376,7 @@ class LoginWindow(QWidget):
         self.token = token  # 暂时保存在实例变量中
         print(f"Token已保存: {token}")
 
-    def open_main_window(self, headers):
+    def open_main_window(self, headers, username, user_no):
         """打开主窗口"""
         # 获取当前选中的仓库名称和对应的仓库ID
         warehouse_name = self.warehouse_combo.currentText()
@@ -382,6 +388,8 @@ class LoginWindow(QWidget):
         self.main_window = MainWindow(
             base_url=self.current_host,  # 传递当前环境的base_url
             headers=headers,  # 传递headers
+            username=username,
+            user_no=user_no,
         )
 
         # 设置仓库ID

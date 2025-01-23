@@ -55,9 +55,10 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
+                    res = response.json()
                     write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 elif owner_info['ownerCode'] == '01':
@@ -94,7 +95,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -134,7 +135,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -174,7 +175,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -221,7 +222,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -264,7 +265,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -307,7 +308,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -349,7 +350,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -394,7 +395,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -434,7 +435,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -475,7 +476,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -515,7 +516,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -562,7 +563,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -605,7 +606,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -648,7 +649,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -690,7 +691,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -733,7 +734,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -771,7 +772,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -810,7 +811,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -848,7 +849,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -894,7 +895,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -936,7 +937,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -978,7 +979,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1019,7 +1020,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "S00004158",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1060,7 +1061,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1096,7 +1097,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1133,7 +1134,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1169,7 +1170,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1213,7 +1214,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1253,7 +1254,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1293,7 +1294,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1332,7 +1333,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1373,7 +1374,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1409,7 +1410,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1446,7 +1447,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1482,7 +1483,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1526,7 +1527,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1566,7 +1567,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1606,7 +1607,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1645,7 +1646,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "productFormType": "YP",
                         "supplierCode": "C00077671",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1702,8 +1703,9 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 2,
                         "supplierCode": "S00004158",
                         "updater": "王玮霞",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}",
-                        "origPlatform": "抖音"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}",
+                        "origPlatform": "抖音",
+                        "isCrossBorderOrder": 0
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1755,8 +1757,9 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 2,
                         "supplierCode": "S00004158",
                         "updater": "王玮霞",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}",
-                        "origPlatform": "抖音"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}",
+                        "origPlatform": "抖音",
+                        "isCrossBorderOrder": 0
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1809,8 +1812,9 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 2,
                         "supplierCode": "S00004158",
                         "updater": "王玮霞",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}",
-                        "origPlatform": "抖音"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}",
+                        "origPlatform": "抖音",
+                        "isCrossBorderOrder": 0
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1862,8 +1866,9 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 2,
                         "supplierCode": "S00004158",
                         "updater": "王玮霞",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}",
-                        "origPlatform": "抖音"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}",
+                        "origPlatform": "抖音",
+                        "isCrossBorderOrder": 0
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -1923,8 +1928,9 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                             "splitNum": 2,
                             "supplierCode": "S00004158",
                             "updater": "王玮霞",
-                            "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}",
-                            "origPlatform": "抖音"
+                            "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}",
+                            "origPlatform": "抖音",
+                            "isCrossBorderOrder": 0
                         }
                         response = requests.post(url, json=data, headers=headers)
                         write_yaml('in_order_data.yaml', data)
@@ -1981,8 +1987,9 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 2,
                         "supplierCode": "S00004158",
                         "updater": "王玮霞",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}",
-                        "origPlatform": "抖音"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}",
+                        "origPlatform": "抖音",
+                        "isCrossBorderOrder": 0
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2037,8 +2044,9 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 2,
                         "supplierCode": "S00004158",
                         "updater": "王玮霞",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}",
-                        "origPlatform": "抖音"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}",
+                        "origPlatform": "抖音",
+                        "isCrossBorderOrder": 0
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2092,8 +2100,9 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 2,
                         "supplierCode": "S00004158",
                         "updater": "王玮霞",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}",
-                        "origPlatform": "抖音"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}",
+                        "origPlatform": "抖音",
+                        "isCrossBorderOrder": 0
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2138,7 +2147,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "supplierCode": "C00015063",
                         "refundReason": "质量问题",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2178,7 +2187,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "supplierCode": "C00015063",
                         "refundReason": "质量问题",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2219,7 +2228,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "supplierCode": "C00015063",
                         "refundReason": "质量问题",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2259,7 +2268,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "supplierCode": "C00015063",
                         "refundReason": "质量问题",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2306,7 +2315,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "supplierCode": "C00015063",
                         "refundReason": "质量问题",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2349,7 +2358,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "supplierCode": "C00015063",
                         "refundReason": "质量问题",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2392,7 +2401,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "supplierCode": "C00015063",
                         "refundReason": "质量问题",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2434,7 +2443,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "supplierCode": "C00015063",
                         "refundReason": "质量问题",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -2790,7 +2799,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     response = requests.post(url, json=data,
                                              headers=headers)
                     res = data
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 elif owner_info['ownerCode'] == '01':
                     data = {
@@ -2828,7 +2837,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
             elif is_whole_piece == 1:
                 if owner_info['ownerCode'] == 'QDBYYYGF':
@@ -2867,7 +2876,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 elif owner_info['ownerCode'] == '01':
                     data = {
@@ -2905,7 +2914,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 else:
                     return "ownerCode参数错误"
@@ -2953,7 +2962,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 elif owner_info['ownerCode'] == '01':
                     dt_list = []
@@ -2997,7 +3006,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
             elif is_whole_piece == 1:
                 if owner_info['ownerCode'] == 'QDBYYYGF':
@@ -3042,7 +3051,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 elif owner_info['ownerCode'] == '01':
                     dt_list = []
@@ -3086,7 +3095,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
 
                 else:
@@ -3130,7 +3139,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 elif owner_info['ownerCode'] == '01':
                     data = {
@@ -3168,7 +3177,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
             elif is_whole_piece == 1:
                 if owner_info['ownerCode'] == 'QDBYYYGF':
@@ -3207,7 +3216,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 elif owner_info['ownerCode'] == '01':
                     data = {
@@ -3245,7 +3254,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 else:
                     return "ownerCode参数错误"
@@ -3293,7 +3302,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 elif owner_info['ownerCode'] == '01':
                     dt_list = []
@@ -3337,7 +3346,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
             elif is_whole_piece == 1:
                 if owner_info['ownerCode'] == 'QDBYYYGF':
@@ -3382,7 +3391,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
                 elif owner_info['ownerCode'] == '01':
                     dt_list = []
@@ -3426,7 +3435,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                     }
                     response = requests.post(url, json=data,
                                              headers=headers)
-                    write_yaml( 'in_order_data.yaml',data)
+                    write_yaml('in_order_data.yaml', data)
                     return {"result": response.json(), "order_no": f"{data['origNo']}"}
 
                 else:
@@ -3467,7 +3476,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "C00084678",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -3505,7 +3514,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "C00084678",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -3544,7 +3553,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "C00084678",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -3582,7 +3591,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "C00084678",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -3627,7 +3636,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "C00084678",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -3668,7 +3677,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "C00084678",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -3709,7 +3718,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "C00084678",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
@@ -3749,7 +3758,7 @@ def create_in_order(base_url, headers, order_type, owner_info, sku_details, is_w
                         "splitNum": 1,
                         "supplierCode": "C00084678",
                         "updater": "李鸿宾",
-                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, warehouse_name)}"
+                        "warehouseCode": f"{get_warehouse_code(base_url, warehouse_id, owner_info['ownerName'], owner_info=owner_info)}"
                     }
                     response = requests.post(url, json=data, headers=headers)
                     write_yaml('in_order_data.yaml', data)
